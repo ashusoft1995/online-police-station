@@ -1,10 +1,10 @@
-com\police\backend\config\DataLoader.class
 com\police\backend\controller\CriminalController.class
-com\police\backend\repository\CriminalRepository.class
-com\police\backend\repository\UserRepository.class
 com\police\backend\entity\User.class
-com\police\backend\controller\AuthController.class
 com\police\backend\controller\TestController.class
-com\police\backend\entity\Criminal.class
 com\police\backend\BackendApplication.class
 com\police\backend\config\SecurityConfig.class
+com\police\backend\config\DataLoader.class
+com\police\backend\repository\CriminalRepository.class
+com\police\backend\repository\UserRepository.class
+com\police\backend\controller\AuthController.class
+com\police\backend\entity\Criminal.class

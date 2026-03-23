@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import CitizenReport from './pages/CitizenReport';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import OfficerManagementPage from './components/OfficerManagementPage';
 import TrafficAccident from './components/TrafficAccident';
 
 function App() {
@@ -38,6 +41,9 @@ function App() {
       <Routes>
         <Route path="/citizen-report" element={<CitizenReport />} />
         <Route path="/traffic-accidents" element={<TrafficAccident />} />
+        <Route path="/profile" element={<Profile user={user} />} />
+        <Route path="/settings" element={<Settings user={user} />} />
+        <Route path="/officer-management" element={<OfficerManagementPage user={user} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route 
           path="/dashboard" 

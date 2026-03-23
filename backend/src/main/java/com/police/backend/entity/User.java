@@ -30,6 +30,34 @@ public class User {
     private String joinDate;
     private String status = "ACTIVE";
     
+    // Comprehensive Profile Fields
+    private String profilePictureUrl;
+    private String gender;
+    private String dateOfBirth;
+    private String nationality;
+    private String education;
+    private String schoolRank;
+    private String testResults;
+    private String performance;
+    private String cvUrl;
+    private String workSchedule;
+    private String salary;
+    private String department;
+    private String rank;
+    private String experience;
+    private String certifications;
+    private String emergencyContact;
+    private String bloodType;
+    private String medicalConditions;
+    private String languages;
+    
+    // Settings/Preferences
+    private String preferredLanguage = "en";
+    private Boolean emailNotifications = true;
+    private Boolean pushNotifications = true;
+    private Boolean darkMode = false;
+    private String timezone = "UTC";
+    
     // Constructors
     public User() {}
     
@@ -73,4 +101,78 @@ public class User {
     
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    
+    // Comprehensive Profile Getters and Setters
+    public String getProfilePictureUrl() { return profilePictureUrl; }
+    public void setProfilePictureUrl(String profilePictureUrl) { this.profilePictureUrl = profilePictureUrl; }
+    
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+    
+    public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    
+    public String getNationality() { return nationality; }
+    public void setNationality(String nationality) { this.nationality = nationality; }
+    
+    public String getEducation() { return education; }
+    public void setEducation(String education) { this.education = education; }
+    
+    public String getSchoolRank() { return schoolRank; }
+    public void setSchoolRank(String schoolRank) { this.schoolRank = schoolRank; }
+    
+    public String getTestResults() { return testResults; }
+    public void setTestResults(String testResults) { this.testResults = testResults; }
+    
+    public String getPerformance() { return performance; }
+    public void setPerformance(String performance) { this.performance = performance; }
+    
+    public String getCvUrl() { return cvUrl; }
+    public void setCvUrl(String cvUrl) { this.cvUrl = cvUrl; }
+    
+    public String getWorkSchedule() { return workSchedule; }
+    public void setWorkSchedule(String workSchedule) { this.workSchedule = workSchedule; }
+    
+    public String getSalary() { return salary; }
+    public void setSalary(String salary) { this.salary = salary; }
+    
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+    
+    public String getRank() { return rank; }
+    public void setRank(String rank) { this.rank = rank; }
+    
+    public String getExperience() { return experience; }
+    public void setExperience(String experience) { this.experience = experience; }
+    
+    public String getCertifications() { return certifications; }
+    public void setCertifications(String certifications) { this.certifications = certifications; }
+    
+    public String getEmergencyContact() { return emergencyContact; }
+    public void setEmergencyContact(String emergencyContact) { this.emergencyContact = emergencyContact; }
+    
+    public String getBloodType() { return bloodType; }
+    public void setBloodType(String bloodType) { this.bloodType = bloodType; }
+    
+    public String getMedicalConditions() { return medicalConditions; }
+    public void setMedicalConditions(String medicalConditions) { this.medicalConditions = medicalConditions; }
+    
+    public String getLanguages() { return languages; }
+    public void setLanguages(String languages) { this.languages = languages; }
+    
+    // Settings/Preferences Getters and Setters
+    public String getPreferredLanguage() { return preferredLanguage; }
+    public void setPreferredLanguage(String preferredLanguage) { this.preferredLanguage = preferredLanguage; }
+    
+    public Boolean getEmailNotifications() { return emailNotifications; }
+    public void setEmailNotifications(Boolean emailNotifications) { this.emailNotifications = emailNotifications; }
+    
+    public Boolean getPushNotifications() { return pushNotifications; }
+    public void setPushNotifications(Boolean pushNotifications) { this.pushNotifications = pushNotifications; }
+    
+    public Boolean getDarkMode() { return darkMode; }
+    public void setDarkMode(Boolean darkMode) { this.darkMode = darkMode; }
+    
+    public String getTimezone() { return timezone; }
+    public void setTimezone(String timezone) { this.timezone = timezone; }
 }
