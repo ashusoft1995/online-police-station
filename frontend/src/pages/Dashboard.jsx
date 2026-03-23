@@ -4,6 +4,8 @@ import api from '../services/api';
 import CriminalForm from '../components/CriminalForm';
 import NotificationBell from '../components/NotificationBell';
 import OfficerManagement from '../components/OfficerManagement';
+import CaseDetailsModal from '../components/CaseDetailsModal';
+import TrafficAccident from '../components/TrafficAccident';
 
 function Dashboard({ user }) {
   const navigate = useNavigate();
@@ -14,6 +16,10 @@ function Dashboard({ user }) {
     solved: 0
   });
   const [loading, setLoading] = useState(true);
+  const [selectedCase, setSelectedCase] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('criminals');
+  const [trafficAccidents, setTrafficAccidents] = useState([]);
 
   useEffect(() => {
     if (!user) {
@@ -21,23 +27,29 @@ function Dashboard({ user }) {
       return;
     }
     fetchCriminals();
+    fetchTrafficAccidents();
+
+    // Handle URL hash for tab navigation
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'traffic') {
+      setActiveTab('traffic');
+    } else {
+      setActiveTab('criminals');
+    }
   }, [user, navigate]);
 
-  const fetchCriminals = async () => {
+  // Update URL hash when tab changes
+  useEffect(() => {
+    const hash = activeTab === 'traffic' ? '#traffic' : '';
+    window.location.hash = hash;
+  }, [activeTab]);
+
+  const fetchTrafficAccidents = async () => {
     try {
-      setLoading(true);
-      const response = await api.get('/criminals');
-      setCriminals(response.data);
-      
-      const total = response.data.length;
-      const active = response.data.filter(c => c.status !== 'CASE_CLOSED' && c.status !== 'Case Closed').length;
-      const solved = response.data.filter(c => c.status === 'CASE_CLOSED' || c.status === 'Case Closed').length;
-      
-      setStats({ totalCases: total, active, solved });
+      const response = await api.get('/traffic/accidents');
+      setTrafficAccidents(response.data);
     } catch (err) {
-      console.error('Error fetching criminals', err);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching traffic accidents', err);
     }
   };
 
@@ -103,17 +115,47 @@ function Dashboard({ user }) {
           </div>
         </div>
 
-        {/* Criminal Registration Form */}
-        <div className="mt-8">
-          <CriminalForm onSuccess={fetchCriminals} />
+        {/* Tabs */}
+        <div className="mt-8 flex space-x-4">
+          <button
+            className={`rounded px-4 py-2 font-semibold ${activeTab === 'criminals' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-200'}`}
+            onClick={() => setActiveTab('criminals')}
+          >
+            Criminals
+            <span className={`ml-2 rounded-full px-2 py-1 text-xs ${activeTab === 'criminals' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}>
+              {criminals.length}
+            </span>
+          </button>
+          <button
+            className={`rounded px-4 py-2 font-semibold ${activeTab === 'traffic' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-200'}`}
+            onClick={() => setActiveTab('traffic')}
+          >
+            Traffic Accidents
+            <span className={`ml-2 rounded-full px-2 py-1 text-xs ${activeTab === 'traffic' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}>
+              {trafficAccidents.length}
+            </span>
+          </button>
         </div>
 
-        {/* Officer Management */}
-        <div className="mt-8">
-          <OfficerManagement />
-        </div>
+        {activeTab === 'criminals' ? (
+          <>
+            {/* Criminal Registration Form */}
+            <div className="mt-8">
+              <CriminalForm onSuccess={fetchCriminals} />
+            </div>
 
-        {/* Criminal List */}
+            {/* Officer Management */}
+            <div className="mt-8">
+              <OfficerManagement />
+            </div>
+
+            {/* Criminal List */}
+          </>
+        ) : (
+          <div className="mt-8">
+            <TrafficAccident />
+          </div>
+        )}
         <div className="mt-8 bg-white rounded-lg shadow-md overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-800">Recent Criminal Cases</h2>
@@ -145,8 +187,22 @@ function Dashboard({ user }) {
                     </tr>
                   ) : (
                     criminals.slice(0, 10).map(criminal => (
-                      <tr key={criminal.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{criminal.name}</td>
+                      <tr
+                        key={criminal.id}
+                        className="hover:bg-gray-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        tabIndex={0}
+                        onClick={() => { setSelectedCase(criminal); setIsModalOpen(true); }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedCase(criminal);
+                            setIsModalOpen(true);
+                          }
+                        }}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {criminal.name}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{criminal.crime}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(criminal.status)}`}>
@@ -171,6 +227,17 @@ function Dashboard({ user }) {
             </div>
           )}
         </div>
+
+        <CaseDetailsModal
+          isOpen={isModalOpen}
+          caseData={selectedCase}
+          user={user}
+          onClose={() => setIsModalOpen(false)}
+          onUpdated={() => {
+            fetchCriminals();
+            setIsModalOpen(false);
+          }}
+        />
       </main>
     </div>
   );

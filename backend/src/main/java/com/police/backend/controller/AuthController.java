@@ -44,11 +44,32 @@ public class AuthController {
         response.put("username", user.getUsername());
         response.put("email", user.getEmail());
         response.put("fullName", user.getFullName());
-        response.put("role", user.getRole());
+            response.put("role", user.getRole());
         response.put("badgeNumber", user.getBadgeNumber());
         response.put("message", "Login successful");
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username already exists"));
+        }
+        // Optional: check existing email uniqueness if required
+        if (user.getEmail() != null && userRepository.findAll().stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(user.getEmail()))) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already exists"));
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (user.getRole() == null || user.getRole().isBlank()) {
+            user.setRole("DETECTIVE");
+        }
+
+        User saved = userRepository.save(user);
+
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/me")

@@ -8,6 +8,7 @@ function OfficerManagement() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [fetchError, setFetchError] = useState('');
   const [newOfficer, setNewOfficer] = useState({
     fullName: '',
     username: '',
@@ -34,11 +35,13 @@ function OfficerManagement() {
 
   const fetchOfficers = async () => {
     try {
+      setFetchError('');
       const response = await api.get('/users');
       const filtered = response.data.filter(u => u.role !== 'POLICE_HEAD');
       setOfficers(filtered);
     } catch (err) {
       console.error('Error fetching officers', err);
+      setFetchError('Error fetching officers. Please try again.');
       setToast({ message: 'Failed to fetch officers', type: 'error' });
     } finally {
       setLoading(false);
@@ -148,12 +151,18 @@ function OfficerManagement() {
           onClick={() => {
             setShowAddForm(!showAddForm);
             setFormError('');
+            setFetchError('');
           }}
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
         >
           + Add New Officer
         </button>
       </div>
+      {fetchError && (
+        <div className="mb-4 px-4 py-2 bg-red-100 text-red-700 rounded">
+          {fetchError}
+        </div>
+      )}
 
       {toast.message && (
         <div className={`fixed top-5 right-5 px-4 py-2 rounded shadow-lg text-white ${toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>

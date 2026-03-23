@@ -87,9 +87,12 @@ function Login({ setUser }) {
         <p className="text-center text-gray-500 text-sm mt-4">
           Test: ashu / Ashu19951?
         </p>
+        <p className="text-center text-gray-500 text-sm mt-2">
+          <a href="/citizen-report" className="text-blue-700 hover:underline">Report incident anonymously (public)</a>
+        </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Login; 
