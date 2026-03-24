@@ -1,3 +1,4 @@
+com\police\backend\controller\StatisticsController.class
 com\police\backend\controller\CriminalController.class
 com\police\backend\entity\User.class
 com\police\backend\controller\TestController.class

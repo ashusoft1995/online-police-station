@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/traffic/accidents")
@@ -28,5 +29,20 @@ public class TrafficAccidentController {
         }
         TrafficAccident saved = trafficAccidentRepository.save(accident);
         return ResponseEntity.ok(saved);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateAccidentStatus(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+        return trafficAccidentRepository.findById(id)
+            .map(accident -> {
+                String status = payload.get("status") != null ? payload.get("status").toString() : null;
+                if (status == null || status.isBlank()) {
+                    return ResponseEntity.badRequest().body("Status is required");
+                }
+                accident.setStatus(status);
+                trafficAccidentRepository.save(accident);
+                return ResponseEntity.ok(accident);
+            })
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
