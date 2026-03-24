@@ -1,5 +1,8 @@
 package com.police.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +17,7 @@ public class User {
     private String username;
     
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     
     @Column(unique = true, nullable = false)
@@ -57,6 +61,9 @@ public class User {
     private Boolean pushNotifications = true;
     private Boolean darkMode = false;
     private String timezone = "UTC";
+
+    private String passwordResetToken;
+    private Long passwordResetExpiry;
     
     // Constructors
     public User() {}
@@ -175,4 +182,12 @@ public class User {
     
     public String getTimezone() { return timezone; }
     public void setTimezone(String timezone) { this.timezone = timezone; }
+
+    @JsonIgnore
+    public String getPasswordResetToken() { return passwordResetToken; }
+    public void setPasswordResetToken(String passwordResetToken) { this.passwordResetToken = passwordResetToken; }
+
+    @JsonIgnore
+    public Long getPasswordResetExpiry() { return passwordResetExpiry; }
+    public void setPasswordResetExpiry(Long passwordResetExpiry) { this.passwordResetExpiry = passwordResetExpiry; }
 }

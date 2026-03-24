@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
@@ -16,7 +17,6 @@ function TrafficAccident() {
   const [listLoading, setListLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState({});
@@ -37,7 +37,9 @@ function TrafficAccident() {
       setAccidents(response.data.reverse());
     } catch (err) {
       console.error('Error fetching accidents', err);
-      setError('Failed to load accidents.');
+      const msg = 'Failed to load accidents.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setListLoading(false);
     }
@@ -96,22 +98,23 @@ function TrafficAccident() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
 
     if (!formData.location || !formData.date || !formData.vehiclesInvolved || !formData.description) {
-      setError('Please fill in all required fields.');
+      toast.error('Please fill in all required fields.');
       return;
     }
 
     setLoading(true);
     try {
       await api.post('/traffic/accidents', formData);
-      setSuccess('Accident registered successfully.');
+      toast.success('Accident registered');
       resetForm();
       await fetchAccidents();
     } catch (err) {
       console.error('Error saving accident', err);
-      setError(err.response?.data?.message || 'Failed to register accident.');
+      const msg = err.response?.data?.message || 'Failed to register accident.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -177,25 +180,30 @@ function TrafficAccident() {
   const handleUpdateStatus = async (accidentId) => {
     const status = selectedStatus[accidentId];
     if (!status) {
-      setError('Please select a status before updating.');
+      toast.error('Select a status before updating.');
       return;
     }
     try {
       setActionLoading(true);
       setError('');
-      setSuccess('');
       await api.put(`/traffic/accidents/${accidentId}/status`, { status });
-      setSuccess('Accident status updated successfully.');
+      toast.success('Status updated');
       await fetchAccidents();
     } catch (err) {
       console.error('Error updating status', err);
-      setError('Failed to update accident status.');
+      const msg = 'Failed to update accident status.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setActionLoading(false);
     }
   };
 
   const exportAccidentsCsv = () => {
+    if (filteredAccidents.length === 0) {
+      toast.error('No rows to export for the current filters.');
+      return;
+    }
     const header = ['Location', 'Date', 'Vehicles Involved', 'Injuries', 'Status'];
     const rows = filteredAccidents.map((a) => [
       a.location || '',
@@ -214,6 +222,7 @@ function TrafficAccident() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    toast.success('CSV downloaded');
   };
 
   const buildTimeline = (accident) => {
@@ -280,8 +289,7 @@ function TrafficAccident() {
           <h1 className="text-2xl font-bold text-gray-800">Traffic Accident Report</h1>
           <p className="text-sm text-gray-500">Register a new traffic accident incident.</p>
 
-          {error && <div className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</div>}
-          {success && <div className="mt-4 rounded bg-green-100 p-3 text-green-700">{success}</div>}
+          {error && <div className="mt-4 rounded-lg border border-red-200 bg-red-50/90 p-3 text-sm text-red-800">{error}</div>}
 
           <form onSubmit={handleSubmit} className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>

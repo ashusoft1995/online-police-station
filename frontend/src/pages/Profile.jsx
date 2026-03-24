@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function Profile({ user }) {
@@ -82,15 +83,17 @@ function Profile({ user }) {
           ...prev,
           profilePictureUrl: response.data.profilePictureUrl
         }));
+        toast.success('Profile photo updated');
       } else if (type === 'cv') {
         setProfileData(prev => ({
           ...prev,
           cvUrl: response.data.cvUrl
         }));
+        toast.success('CV uploaded');
       }
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Failed to upload file');
+      toast.error('Failed to upload file');
     }
   };
 
@@ -100,10 +103,10 @@ function Profile({ user }) {
 
     try {
       await api.put(`/users/${user.id}/profile`, profileData);
-      alert('Profile updated successfully!');
+      toast.success('Profile updated successfully');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile');
+      toast.error('Failed to update profile');
     } finally {
       setSaving(false);
     }

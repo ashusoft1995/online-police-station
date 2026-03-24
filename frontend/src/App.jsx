@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import CitizenReport from './pages/CitizenReport';
 import Profile from './pages/Profile';
@@ -27,10 +28,10 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="animate-fadeIn text-center">
+          <div className="mx-auto h-14 w-14 animate-spin rounded-full border-2 border-slate-200 border-t-police-blue shadow-sm" />
+          <p className="mt-5 text-sm font-medium text-slate-600">Loading workspace…</p>
         </div>
       </div>
     );
@@ -40,11 +41,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/citizen-report" element={<CitizenReport />} />
-        <Route path="/traffic-accidents" element={<TrafficAccident />} />
+        <Route
+          path="/traffic-accidents"
+          element={user ? <TrafficAccident /> : <Navigate to="/login" />}
+        />
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/settings" element={<Settings user={user} />} />
         <Route path="/officer-management" element={<OfficerManagementPage user={user} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route 
           path="/dashboard" 
           element={

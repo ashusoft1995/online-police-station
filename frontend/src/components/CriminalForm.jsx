@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function CriminalForm({ onSuccess }) {
@@ -35,7 +36,9 @@ function CriminalForm({ onSuccess }) {
       // Get user data from localStorage
       const user = JSON.parse(localStorage.getItem('user'));
       if (!user) {
-        setError('User not authenticated');
+        const msg = 'User not authenticated';
+        setError(msg);
+        toast.error(msg);
         return;
       }
 
@@ -65,7 +68,9 @@ function CriminalForm({ onSuccess }) {
         comments: ''
       });
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to register criminal');
+      const msg = err.response?.data?.message || 'Failed to register criminal';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 const statusOptions = [
@@ -13,14 +14,12 @@ function CaseDetailsModal({ isOpen, onClose, caseData, user, onUpdated }) {
   const [commentText, setCommentText] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (caseData) {
       setStatus(caseData.status || 'UNDER_INVESTIGATION');
       setCommentText('');
       setError('');
-      setSuccess('');
     }
   }, [caseData, isOpen]);
 
@@ -43,13 +42,12 @@ function CaseDetailsModal({ isOpen, onClose, caseData, user, onUpdated }) {
 
   const handleSave = async () => {
     if (!canEdit) {
-      setError('Only Police Head can update case status and comments.');
+      toast.error('Only Police Head can update case status and comments.');
       return;
     }
 
     setSaving(true);
     setError('');
-    setSuccess('');
 
     try {
       const updatedComments = commentText.trim()
@@ -63,12 +61,14 @@ function CaseDetailsModal({ isOpen, onClose, caseData, user, onUpdated }) {
       };
 
       await api.put(`/criminals/${caseData.id}`, payload);
-      setSuccess('Case updated successfully.');
+      toast.success('Case updated');
       setCommentText('');
       if (onUpdated) onUpdated();
     } catch (err) {
       console.error('Error updating case', err);
-      setError(err.response?.data?.message || 'Failed to update case.');
+      const msg = err.response?.data?.message || 'Failed to update case.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setSaving(false);
     }
@@ -168,7 +168,6 @@ function CaseDetailsModal({ isOpen, onClose, caseData, user, onUpdated }) {
         )}
 
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-        {success && <p className="mt-3 text-sm text-green-600">{success}</p>}
 
         <div className="mt-5 flex justify-end space-x-3">
           <button

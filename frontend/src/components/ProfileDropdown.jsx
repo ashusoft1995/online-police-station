@@ -48,7 +48,7 @@ function ProfileDropdown({ user, onLogout }) {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 hover:bg-blue-700 px-3 py-2 rounded transition-colors"
+        className="flex items-center space-x-2 hover:bg-white/10 px-3 py-2 rounded transition-colors text-slate-100"
       >
         {profileData?.profilePictureUrl ? (
           <img

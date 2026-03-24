@@ -72,7 +72,7 @@ function NotificationBell() {
       {/* Bell Icon with Badge */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+        className="relative p-2 text-slate-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 rounded-full"
       >
         <svg
           className="w-6 h-6"

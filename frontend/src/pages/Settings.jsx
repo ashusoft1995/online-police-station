@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function Settings({ user }) {
@@ -53,10 +54,10 @@ function Settings({ user }) {
 
     try {
       await api.put(`/users/${user.id}/settings`, settings);
-      alert('Settings updated successfully!');
+      toast.success('Settings saved');
     } catch (error) {
       console.error('Error updating settings:', error);
-      alert('Failed to update settings');
+      toast.error('Failed to update settings');
     } finally {
       setSaving(false);
     }

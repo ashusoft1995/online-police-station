@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function CitizenReports({ user }) {
@@ -46,10 +47,10 @@ function CitizenReports({ user }) {
       setSelectedReport(null);
       setReplyText('');
       fetchReports();
-      alert('Reply sent successfully!');
+      toast.success('Reply sent');
     } catch (error) {
       console.error('Error sending reply:', error);
-      alert('Failed to send reply');
+      toast.error('Failed to send reply');
     } finally {
       setReplying(false);
     }
@@ -66,8 +67,10 @@ function CitizenReports({ user }) {
 
       await api.put(`/reports/${reportId}/status`, updateData);
       fetchReports();
+      toast.success('Report updated');
     } catch (error) {
       console.error('Error updating report status:', error);
+      toast.error('Could not update report');
     }
   };
 

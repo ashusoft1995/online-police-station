@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function OfficerManagement({ user }) {
@@ -85,10 +86,10 @@ function OfficerManagement({ user }) {
       setShowEditModal(false);
       setSelectedOfficer(null);
       fetchOfficers();
-      alert('Officer profile updated successfully!');
+      toast.success('Officer profile updated');
     } catch (error) {
       console.error('Error updating officer:', error);
-      alert('Failed to update officer profile');
+      toast.error('Failed to update officer profile');
     }
   };
 

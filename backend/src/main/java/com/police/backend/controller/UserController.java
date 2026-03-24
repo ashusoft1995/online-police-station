@@ -4,6 +4,7 @@ import com.police.backend.entity.User;
 import com.police.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('POLICE_HEAD')")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             Map<String, String> error = new HashMap<>();
@@ -50,6 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('POLICE_HEAD')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
@@ -74,6 +77,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('POLICE_HEAD')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         if (!userRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

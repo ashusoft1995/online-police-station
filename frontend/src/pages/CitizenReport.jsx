@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 const incidentTypes = ['Theft', 'Assault', 'Accident', 'Other'];
@@ -66,17 +67,20 @@ function CitizenReport() {
       });
 
       setSuccess('Report submitted successfully. Thank you.');
+      toast.success('Report submitted. Thank you.');
       resetForm();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to submit report.');
+      const msg = err.response?.data?.message || 'Failed to submit report.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
-      <div className="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
+    <div className="min-h-screen px-4 py-10">
+      <div className="animate-fadeIn mx-auto max-w-3xl rounded-2xl border border-slate-200/80 bg-white/90 p-8 shadow-xl shadow-slate-900/5 backdrop-blur-sm">
         <h1 className="mb-6 text-3xl font-bold text-gray-800">Citizen Incident Report</h1>
 
         {error && <div className="rounded bg-red-100 p-3 text-sm text-red-700">{error}</div>}

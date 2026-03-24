@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function OfficerManagement() {
@@ -31,7 +32,6 @@ function OfficerManagement() {
     address: ''
   });
   const [formError, setFormError] = useState('');
-  const [toast, setToast] = useState({ message: '', type: '' });
 
   useEffect(() => {
     fetchOfficers();
@@ -50,13 +50,6 @@ function OfficerManagement() {
       console.error('Failed to restore officer table state', err);
     }
   }, []);
-
-  useEffect(() => {
-    if (toast.message) {
-      const id = setTimeout(() => setToast({ message: '', type: '' }), 3000);
-      return () => clearTimeout(id);
-    }
-  }, [toast]);
 
   useEffect(() => {
     const snapshot = {
@@ -80,7 +73,7 @@ function OfficerManagement() {
     } catch (err) {
       console.error('Error fetching officers', err);
       setFetchError('Error fetching officers. Please try again.');
-      setToast({ message: 'Failed to fetch officers', type: 'error' });
+      toast.error('Failed to fetch officers');
     } finally {
       setLoading(false);
     }
@@ -121,10 +114,10 @@ function OfficerManagement() {
         address: ''
       });
       await fetchOfficers();
-      setToast({ message: 'Officer added successfully', type: 'success' });
+      toast.success('Officer added');
     } catch (err) {
       console.error(err);
-      setToast({ message: err.response?.data?.error || 'Error adding officer', type: 'error' });
+      toast.error(err.response?.data?.error || 'Error adding officer');
     } finally {
       setActionLoading(false);
     }
@@ -167,11 +160,11 @@ function OfficerManagement() {
         status: editOfficer.status
       });
       await fetchOfficers();
-      setToast({ message: 'Officer updated successfully', type: 'success' });
+      toast.success('Officer updated');
       cancelEditOfficer();
     } catch (err) {
       console.error(err);
-      setToast({ message: 'Failed to update officer', type: 'error' });
+      toast.error('Failed to update officer');
     } finally {
       setActionLoading(false);
     }
@@ -183,10 +176,10 @@ function OfficerManagement() {
       setActionLoading(true);
       await api.delete(`/users/${deleteId}`);
       await fetchOfficers();
-      setToast({ message: 'Officer deleted successfully', type: 'success' });
+      toast.success('Officer deleted');
     } catch (err) {
       console.error(err);
-      setToast({ message: 'Error deleting officer', type: 'error' });
+      toast.error('Error deleting officer');
     } finally {
       setActionLoading(false);
       setShowDeleteConfirm(false);
@@ -203,10 +196,10 @@ function OfficerManagement() {
         status: nextStatus
       });
       await fetchOfficers();
-      setToast({ message: `Officer marked as ${nextStatus}`, type: 'success' });
+      toast.success(`Officer marked as ${nextStatus}`);
     } catch (err) {
       console.error(err);
-      setToast({ message: 'Failed to update officer status', type: 'error' });
+      toast.error('Failed to update officer status');
     } finally {
       setActionLoading(false);
     }
@@ -377,12 +370,6 @@ function OfficerManagement() {
       {fetchError && (
         <div className="mb-4 px-4 py-2 bg-red-100 text-red-700 rounded">
           {fetchError}
-        </div>
-      )}
-
-      {toast.message && (
-        <div className={`fixed top-5 right-5 px-4 py-2 rounded shadow-lg text-white ${toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
-          {toast.message}
         </div>
       )}
 

@@ -15,11 +15,10 @@ import {
 } from 'recharts';
 import api from '../services/api';
 import CriminalForm from '../components/CriminalForm';
-import NotificationBell from '../components/NotificationBell';
 import OfficerManagement from '../components/OfficerManagement';
 import CaseDetailsModal from '../components/CaseDetailsModal';
 import TrafficAccident from '../components/TrafficAccident';
-import ProfileDropdown from '../components/ProfileDropdown';
+import PoliceCommandHeader from '../components/PoliceCommandHeader';
 import CitizenReports from '../components/CitizenReports';
 
 function Dashboard({ user }) {
@@ -229,53 +228,13 @@ function Dashboard({ user }) {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-blue-900 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <span className="text-2xl">🚔</span>
-              <h1 className="text-xl font-bold">Police Station System</h1>
-            </div>
-            
-            {/* Navigation Menu */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <button 
-                onClick={() => navigate('/dashboard')}
-                className="hover:text-blue-200 transition-colors"
-              >
-                Dashboard
-              </button>
-              <button 
-                onClick={() => navigate('/citizen-report')}
-                className="hover:text-blue-200 transition-colors"
-              >
-                Citizen Report
-              </button>
-              <button 
-                onClick={() => navigate('/traffic-accidents')}
-                className="hover:text-blue-200 transition-colors"
-              >
-                Traffic Accidents
-              </button>
-              {user?.role === 'POLICE_HEAD' && (
-                <button 
-                  onClick={() => setActiveTab('officers')}
-                  className="hover:text-blue-200 transition-colors"
-                >
-                  Officer Management
-                </button>
-              )}
-            </nav>
-            
-            <div className="flex items-center space-x-4">
-              <NotificationBell />
-              <ProfileDropdown user={user} onLogout={handleLogout} />
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen">
+      <PoliceCommandHeader
+        variant="full"
+        user={user}
+        onLogout={handleLogout}
+        onOfficersTab={user?.role === 'POLICE_HEAD' ? () => setActiveTab('officers') : undefined}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
